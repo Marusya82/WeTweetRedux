@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp" >
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:paddingRight="5dp"
+        android:id="@+id/ivProfileImage"
+        tools:src="@drawable/ic_launcher"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif"
+        tools:text="Billy"
+        android:textSize="12sp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/ivProfileImage" />
+
+    <TextView
+        android:id="@+id/tvUserScreenName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="/@name"
+        android:fontFamily="sans-serif"
+        android:textSize="12sp"
+        android:layout_toRightOf="@+id/tvUserName"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/tvTweetBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:autoLink="all"
+        android:fontFamily="sans-serif"
+        android:linksClickable="true"
+        tools:text="Here is my tweet"
+        android:layout_below="@id/tvUserName"
+        android:layout_toRightOf="@+id/ivProfileImage" />
+
+    <TextView
+        android:id="@+id/tvTimestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="8min"
+        android:fontFamily="sans-serif"
+        android:textSize="12sp"
+        android:layout_above="@+id/tvTweetBody"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_below="@+id/tvTweetBody"
+        android:layout_toRightOf="@+id/ivProfileImage">
+
+        <com.malmstein.fenster.view.FensterVideoView
+            android:id="@+id/play_video_texture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:keepScreenOn="true"
+            android:fitsSystemWindows="true" />
+
+        <com.malmstein.fenster.controller.SimpleMediaFensterPlayerController
+            android:id="@+id/play_video_controller"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:animateLayoutChanges="true"
+            android:fitsSystemWindows="true" />
+
+    </FrameLayout>
+
+</RelativeLayout>

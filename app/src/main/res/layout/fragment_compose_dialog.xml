@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".fragments.ComposeDialogFragment">
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/ivDialogProfileImage"
+        android:src="@drawable/ic_launcher"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivCloseImage"
+        tools:src="@drawable/ic_launcher"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:text="What's happening?"
+        android:id="@+id/etTweetBody"
+        android:hint="@string/tweet_hint"
+        android:fontFamily="sans-serif-light"
+        android:layout_below="@+id/ivDialogProfileImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnTweet"
+        android:text="@string/tweet"
+        style="?android:attr/buttonStyleSmall"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-light"
+        android:backgroundTint="@color/blue"
+        android:enabled="false"
+        tools:text="Tweet"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:layout_below="@+id/etTweetBody"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        tools:text="140"
+        android:id="@+id/textView"
+        android:gravity="center_vertical"
+        android:fontFamily="sans-serif-light"
+        android:textSize="12sp"
+        android:layout_below="@+id/etTweetBody"
+        android:layout_toStartOf="@+id/btnTweet"
+        android:layout_toLeftOf="@+id/btnTweet" />
+
+</RelativeLayout>

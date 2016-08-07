@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WeTweet</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_photos">Home timeline</string>
+    <string name="login_label">Connect to twitter</string>
+    <string name="clicked">Clicked!</string>
+    <string name="posted">Posted!</string>
+    <string name="tweet_hint">What is happening?</string>
+    <string name="fragment_compose">fragment_compose</string>
+    <string name="tweet">Tweet</string>
+    <string name="loading">Loading…</string>
+    <string name="wrong">Something went wrong. Try again later</string>
+
+</resources>
