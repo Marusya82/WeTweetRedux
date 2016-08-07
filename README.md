@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # RestClientTemplate
 
 ## Overview
@@ -296,7 +295,7 @@ The following **optional** features are implemented:
 * [ ] User can **open the twitter app offline and see last loaded tweets**. Persisted in SQLite tweets are refreshed on every application launch. While "live data" is displayed when app can get it from Twitter API, it is also saved for use in offline mode.
 * [x] User can tap a tweet to **open a detailed tweet view**
 * [x] User can **select "reply" from detail view to respond to a tweet**
-* [x] Improve the user interface and theme the app to feel "twitter branded": Rounded corners with Glide for profile images, colors, tweet button enabled/dissabled based on the number of characters, images embedded in a tweet are resized with Glide, 
+* [x] Improve the user interface and theme the app to feel "twitter branded": Rounded corners with Glide for profile images, colors, tweet button enabled/dissabled based on the number of characters, images embedded in a tweet are resized with Glide, fonts, lines, profile picture display in a create tweet dialog, 
 
 The following **bonus** features are implemented:
 
