@@ -40,11 +40,16 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
     @BindView(R.id.tvTimestamp) TextView tvTimestamp;
     @BindView(R.id.ivImage) ImageView ivImage;
     @BindView(R.id.ivReply) ImageView ivReply;
+    @BindView(R.id.tvLikes) TextView tvLikes;
+    @BindView(R.id.tvLikesText) TextView tvLikesText;
+    @BindView(R.id.tvRetweets) TextView tvRetweets;
+    @BindView(R.id.tvRetweetsText) TextView tvRetweetsText;
+
     Context context;
     private TwitterClient client;
     long maxId;
     String profileUrl;
-    MenuItem miActionProgressItem;
+//    MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,14 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
         tvUserName.setText(tweet.getUser().getName());
         tvTweetBody.setText(tweet.getBody());
         tvUserScreenName.setText(String.format("@%s", tweet.getUser().getScreenName()));
+        if (Integer.parseInt(tweet.getLikes()) > 0) {
+            tvLikes.setText(tweet.getLikes());
+            tvLikesText.setText("LIKES");
+        }
+        if (Integer.parseInt(tweet.getRetweets()) > 0) {
+            tvRetweets.setText(tweet.getRetweets());
+            tvRetweetsText.setText("RETWEETS");
+        }
 
         String[] str = tweet.getCreatedAt().split(" ");
         tvTimestamp.setText(String.format("%s %s %s, %s", str[0], str[1], str[2], str[3]));

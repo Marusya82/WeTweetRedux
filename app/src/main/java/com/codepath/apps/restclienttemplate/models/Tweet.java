@@ -20,6 +20,16 @@ public class Tweet {
     String createdAt;
     String imageUrl;
     String videoUrl;
+    String likes;
+    String retweets;
+
+    public String getLikes() {
+        return likes;
+    }
+
+    public String getRetweets() {
+        return retweets;
+    }
 
     public void setUser(User user) {
         this.user = user;
@@ -80,6 +90,8 @@ public class Tweet {
             tweet.tid = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            tweet.retweets = jsonObject.getString("retweet_count");
+            tweet.likes = jsonObject.getString("favorite_count");
 
             JSONObject entities = jsonObject.getJSONObject("entities");
             JSONArray media = entities.getJSONArray("media");

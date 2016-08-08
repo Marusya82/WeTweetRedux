@@ -33,6 +33,7 @@ public class ComposeDialogFragment extends DialogFragment {
     @BindView(R.id.textView) TextView tvCount;
     @BindView(R.id.ivDialogProfileImage) ImageView imDialogProfileImage;
     @BindView(R.id.ivCloseImage) ImageView imCloseImage;
+
     private Unbinder unbinder;
     private String inReplyToUserName;
     private String inReplyToStatusId;
