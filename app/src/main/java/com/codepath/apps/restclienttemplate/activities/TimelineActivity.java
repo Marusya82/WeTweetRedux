@@ -24,6 +24,7 @@ import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.adapters.TweetsRecyclerViewAdapter;
 import com.codepath.apps.restclienttemplate.client.TwitterApplication;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
+import com.codepath.apps.restclienttemplate.database.TweetsDatabaseHelper;
 import com.codepath.apps.restclienttemplate.fragments.ComposeDialogFragment;
 import com.codepath.apps.restclienttemplate.models.DividerItemDecoration;
 import com.codepath.apps.restclienttemplate.models.EndlessScrollListener;
@@ -47,12 +48,18 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
     private TwitterClient client;
     ArrayList<Tweet> tweets;
-    MenuItem miActionProgressItem;
     TweetsRecyclerViewAdapter adaptTweets;
+
+    MenuItem miActionProgressItem;
+
     long maxID;
     boolean firstQuery = true;
     final int count = 50;
+
     String profileUrl;
+
+    // database instance
+    TweetsDatabaseHelper helper;
 
     @BindView(R.id.rvTweets) RecyclerView rvTweets;
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -70,6 +77,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
     public void setupViews() {
         //        setSupportActionBar(toolbar);
 
+        // get db instance and construct the data source
+        helper = TweetsDatabaseHelper.getInstance(this);
+
         tweets = new ArrayList<>();
         adaptTweets = new TweetsRecyclerViewAdapter(tweets);
         rvTweets.setAdapter(adaptTweets);
@@ -85,80 +95,89 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
         // setup client
         client = TwitterApplication.getRestClient();
 
-        getProfileImageUrl();
+        if(isNetworkAvailable()) {
+            getProfileImageUrl();
 
-        populateTimeline();
+            populateTimeline();
 
-        rvTweets.addOnScrollListener(new EndlessScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                populateTimeline();
-            }
-        });
-
-        ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
-                (recyclerView, position, v) -> {
-                    Intent i = new Intent(getApplicationContext(), TweetActivity.class);
-                    Tweet tweet = tweets.get(position);
-                    i.putExtra("tweet", Parcels.wrap(tweet));
-                    startActivity(i);
+            rvTweets.addOnScrollListener(new EndlessScrollListener(layoutManager) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount) {
+                    populateTimeline();
                 }
-        );
+            });
 
-        fab.setOnClickListener(v -> {
-            FragmentManager fm = getSupportFragmentManager();
-            ComposeDialogFragment composeDialog = ComposeDialogFragment.newInstance("Compose a tweet:");
-            Bundle bundle = new Bundle();
-            bundle.putString("profile_url", profileUrl);
-            composeDialog.setArguments(bundle);
-            composeDialog.show(fm, "fragment_compose_dialog");
-        });
-
-        swipeContainer.setOnRefreshListener(() -> {
-
-            RequestParams params = new RequestParams();
-            params.put("since_id", 1);
-            params.put("count", count);
-
-            if(isNetworkAvailable()) {
-                client.getHomeTimeline(params, new JsonHttpResponseHandler() {
-
-                    // SUCCESS
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
-                        // get JSON, deserialize it, create models and add them into adapter, into the data set
-                        int curSize = adaptTweets.getItemCount();
-                        tweets.clear();
-                        adaptTweets.notifyItemRangeRemoved(0, curSize);
-                        ArrayList<Tweet> newItems = Tweet.fromJSONArray(jsonArray);
-                        Tweet latestTweet = newItems.get(newItems.size() - 1);
-                        // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
-                        maxID = latestTweet.getTid() - 1;
-                        tweets.addAll(newItems);
-                        // curSize should represent the first element that got added, newItems.size() represents the itemCount
-                        adaptTweets.notifyItemRangeInserted(curSize, newItems.size());
-//                        rvTweets.invalidate();
-//                    hideProgressBar();
+            ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+                    (recyclerView, position, v) -> {
+                        Intent i = new Intent(getApplicationContext(), TweetActivity.class);
+                        Tweet tweet = tweets.get(position);
+                        i.putExtra("tweet", Parcels.wrap(tweet));
+                        startActivity(i);
                     }
+            );
 
-                    // FAILURE
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Log.d("DEBUG", errorResponse.toString());
-                        Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
-                    }
+            fab.setOnClickListener(v -> {
+                FragmentManager fm = getSupportFragmentManager();
+                ComposeDialogFragment composeDialog = ComposeDialogFragment.newInstance("Compose a tweet:");
+                Bundle bundle = new Bundle();
+                bundle.putString("profile_url", profileUrl);
+                composeDialog.setArguments(bundle);
+                composeDialog.show(fm, "fragment_compose_dialog");
+            });
 
-                });
-            }
+            swipeContainer.setOnRefreshListener(() -> {
 
-            swipeContainer.setRefreshing(false);
+                RequestParams params = new RequestParams();
+                params.put("since_id", 1);
+                params.put("count", count);
 
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+                if (isNetworkAvailable()) {
+                    client.getHomeTimeline(params, new JsonHttpResponseHandler() {
+
+                        // SUCCESS
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
+                            // get JSON, deserialize it, create models and add them into adapter, into the data set
+                            int curSize = adaptTweets.getItemCount();
+                            tweets.clear();
+                            adaptTweets.notifyItemRangeRemoved(0, curSize);
+                            ArrayList<Tweet> newItems = Tweet.fromJSONArray(jsonArray);
+                            Tweet latestTweet = newItems.get(newItems.size() - 1);
+                            // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
+                            maxID = latestTweet.getTid() - 1;
+                            tweets.addAll(newItems);
+                            // curSize should represent the first element that got added, newItems.size() represents the itemCount
+                            adaptTweets.notifyItemRangeInserted(curSize, newItems.size());
+                            //                        rvTweets.invalidate();
+                            //                    hideProgressBar();
+                        }
+
+                        // FAILURE
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            Log.d("DEBUG", errorResponse.toString());
+                            Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                        }
+
+                    });
+                }
+
+                swipeContainer.setRefreshing(false);
+
+            });
+            // Configure the refreshing colors
+            swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                    android.R.color.holo_green_light,
+                    android.R.color.holo_orange_light,
+                    android.R.color.holo_red_light);
+        } else {
+            Snackbar.make(findViewById(android.R.id.content), R.string.offline, Snackbar.LENGTH_INDEFINITE).show();
+            int curSize = adaptTweets.getItemCount();
+            ArrayList<Tweet> savedTweets = helper.getAll();
+            tweets.addAll(savedTweets);
+            adaptTweets.notifyItemRangeInserted(curSize, savedTweets.size());
+            Log.d("DEBUG", helper.getAll().toString());
+        }
     }
 
     private void getProfileImageUrl() {
@@ -186,8 +205,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
             });
         }
-
-
     }
 
     @Override
@@ -231,6 +248,8 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                     tweets.addAll(newItems);
                     // curSize should represent the first element that got added, newItems.size() represents the itemCount
                     adaptTweets.notifyItemRangeInserted(curSize, newItems.size());
+                    helper.deleteAll();
+                    helper.addAll(newItems);
 //                    hideProgressBar();
                 }
 
@@ -240,7 +259,6 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                     Log.d("DEBUG", errorResponse.toString());
                     Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
                 }
-
             });
         }
     }

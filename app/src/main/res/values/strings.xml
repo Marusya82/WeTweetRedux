@@ -12,5 +12,6 @@
     <string name="tweet">Tweet</string>
     <string name="loading">Loading…</string>
     <string name="wrong">Something went wrong. Try again later</string>
+    <string name="offline">No internet connectivity. You can only scroll through last saved tweets</string>
 
 </resources>

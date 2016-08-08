@@ -21,6 +21,30 @@ public class Tweet {
     String imageUrl;
     String videoUrl;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setTid(long tid) {
+        this.tid = tid;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
