@@ -27,7 +27,7 @@ The following **optional** features are implemented:
 * [x] User can **open the twitter app offline and see last loaded tweets**. Persisted in SQLite tweets are refreshed on every application launch. While "live data" is displayed when app can get it from Twitter API, it is also saved for use in offline mode.
 * [x] User can tap a tweet to **open a detailed tweet view**
 * [x] User can **select "reply" from detail view to respond to a tweet**
-* [x] Improve the user interface and theme the app to feel "twitter branded": rounded corners with Glide for profile images; tweet button enabled/dissabled based on the number of characters; images embedded in a tweet are resized with Glide; fonts, lines and colors are adjusted; profile picture is displayed in a create tweet dialog, displaying of number of retweets/likes; home button is customized.
+* [x] Improve the user interface and theme the app to feel "twitter branded": rounded corners with Glide for profile images; tweet button enabled/dissabled based on the number of characters; images embedded in a tweet are resized with Glide; fonts, lines and colors are adjusted; profile picture is displayed in a create tweet dialog; displaying of number of retweets/likes in detailed view; home button is customized; close button to dismiss creating a tweet is implemented.
 
 The following **bonus** features are implemented:
 
