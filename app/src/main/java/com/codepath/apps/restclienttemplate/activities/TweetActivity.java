@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -55,6 +56,12 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
 
     private void setupViews() {
         // setup client
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeAsUpIndicator(R.drawable.arrow_home);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setLogo(R.drawable.birdie_small);
+        actionBar.setDisplayUseLogoEnabled(true);
+
         client = TwitterApplication.getRestClient();
 
         getProfileImageUrl();
@@ -86,6 +93,17 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
             composeDialog.setArguments(bundle);
             composeDialog.show(fm, "fragment_compose_dialog");
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                // ProjectsActivity is my 'home' activity
+                finish();
+                return true;
+        }
+        return (super.onOptionsItemSelected(menuItem));
     }
 
     @Override

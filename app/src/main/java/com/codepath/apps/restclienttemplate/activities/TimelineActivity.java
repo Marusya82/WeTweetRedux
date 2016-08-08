@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,6 +77,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
     public void setupViews() {
         //        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setLogo(R.drawable.birdie_small);
+        actionBar.setDisplayUseLogoEnabled(true);
 
         // get db instance and construct the data source
         helper = TweetsDatabaseHelper.getInstance(this);

@@ -11,4 +11,9 @@
         <item name="colorControlActivated">@color/light_gray</item>
     </style>
 
+    <!--<style name="MyActionBarLogo" parent="@style/Widget.AppCompat.Light.ActionBar">-->
+        <!--<item name="logo">@drawable/birdie_small</item>-->
+        <!--<item name="displayOptions">useLogo|showHome</item>-->
+    <!--</style>-->
+
 </resources>
