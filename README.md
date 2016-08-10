@@ -9,11 +9,19 @@ Time spent: **X** hours spent in total
 The following **required** functionality is completed:
 
 * [ ] The app includes **all required user stories** from Week 3 Twitter Client
+  * [x] User can sign in to Twitter using OAuth login
+  * [x] User can view tweets from their home timeline
+  * [x] User is displayed the username, name, and body for each tweet
+  * [x] User is displayed the relative timestamp for each tweet "8m", "7h"
+  * [ ] User can view more tweets as they scroll with infinite pagination. Number of tweets is unlimited. However there are Twitter Api Rate Limits in place.
+  * [x] User can click a “Compose” icon in the Action Bar on the top right
+  * [x] User can then enter a new tweet and post this to twitter
+  * [ ] User is taken back to home timeline with new tweet visible in timeline
 * [x] User can **switch between Timeline and Mention views using tabs**
-  * [ ] User can view their home timeline tweets.
-  * [ ] User can view the recent mentions of their username.
-* [ ] User can navigate to **view their own profile**
-  * [ ] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
+  * [x] User can view their home timeline tweets.
+  * [x] User can view the recent mentions of their username.
+* [x] User can navigate to **view their own profile**
+  * [x] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
 * [ ] User can **click on the profile image** in any tweet to see **another user's** profile.
  * [ ] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
  * [ ] Profile view includes that user's timeline
@@ -41,13 +49,17 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [ ] List anything else that you can get done to improve the app functionality!
+* [x] Floating button for compose tweet is implemented for fragments
+* [x] Tweets are persisted in the SQL database for offline access
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+##### Online mode 
+![Alt Text](https://github.com/Marusya82/WeTweetRedux/blob/master/WeTweetRedux_online_demo.gif)
+##### Offline mode 
+![Alt Text](https://github.com/Marusya82/WeTweetRedux/blob/master/WeTweetRedux_offline_demo.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -56,20 +68,13 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 Describe any challenges encountered while building the app.
 
 ## Open-source libraries used
->>>>>>> 63ef2791e8c88ea19ca086d710c4b1a0a3bacfe1
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
 
-<<<<<<< HEAD
-#### License
-
-    Copyright [2016] [Marina Tanasyuk]
-=======
 ## License
 
     Copyright [yyyy] [name of copyright owner]
->>>>>>> 63ef2791e8c88ea19ca086d710c4b1a0a3bacfe1
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -82,7 +87,6 @@ Describe any challenges encountered while building the app.
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-<<<<<<< HEAD
 
 # RestClientTemplate
 
