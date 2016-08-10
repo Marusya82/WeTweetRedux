@@ -13,7 +13,6 @@ The following **required** functionality is completed:
   * [x] User can view tweets from their home timeline
   * [x] User is displayed the username, name, and body for each tweet
   * [x] User is displayed the relative timestamp for each tweet "8m", "7h"
-  * [ ] User can view more tweets as they scroll with infinite pagination. Number of tweets is unlimited. However there are Twitter Api Rate Limits in place.
   * [x] User can click a “Compose” icon in the Action Bar on the top right
   * [x] User can then enter a new tweet and post this to twitter
   * [ ] User is taken back to home timeline with new tweet visible in timeline
