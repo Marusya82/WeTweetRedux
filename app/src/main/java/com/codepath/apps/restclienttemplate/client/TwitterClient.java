@@ -24,8 +24,8 @@ import org.scribe.builder.api.TwitterApi;
 public class TwitterClient extends OAuthBaseClient {
 	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class; // Change this
 	public static final String REST_URL = "https://api.twitter.com/1.1/"; // Change this, base API URL
-	public static final String REST_CONSUMER_KEY = "mNCiRK3fp004lf0nBDWm7hJul";       // Change this
-	public static final String REST_CONSUMER_SECRET = "MOzADXzkMTY4X6q4llg0QLjdX4QJIKf2bxPczSjHirhFr0x0ME"; // Change this
+	public static final String REST_CONSUMER_KEY = "twKvmHhqnyY19Dl7i99Bvrwnl";       // Change this
+	public static final String REST_CONSUMER_SECRET = "tnO6DuXhnrWxIiSytJlJ2kGuog7XNCyqLJnCYnytwRPGTdWcn9"; // Change this
 	public static final String REST_CALLBACK_URL = "oauth://cpmysimpletweets"; // Change this (here and in manifest)
 
 	public TwitterClient(Context context) {
@@ -58,7 +58,7 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().post(apiUrl, params, handler);
 	}
 
-	public void getProfileImageUrl(AsyncHttpResponseHandler handler) {
+	public void getProfileDetails(AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("account/verify_credentials.json");
 		// execute the request
 		getClient().get(apiUrl, handler);
@@ -89,10 +89,13 @@ public class TwitterClient extends OAuthBaseClient {
 
     // https://api.twitter.com/1.1/statuses/user_timeline.json
     // returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id parameters
-    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+    public void getUserTimeline(String userScreenName, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/user_timeline.json");
         // execute the request
-        getClient().get(apiUrl, params, handler);
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        params.put("screen_name", userScreenName);
+        getClient().get(apiUrl, null, handler);
     }
 
     // https://api.twitter.com/1.1/direct_messages.json

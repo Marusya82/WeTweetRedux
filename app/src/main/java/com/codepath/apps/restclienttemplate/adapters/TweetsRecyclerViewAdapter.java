@@ -170,9 +170,15 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         String[] parts = relativeDate.split(" ");
-        String dateToShow = parts[0] + parts[1].charAt(0);
+        if (parts.length <= 1) {
+            return relativeDate;
+        }
+        else {
+            String dateToShow = parts[0] + parts[1].charAt(0);
+            return dateToShow;
+        }
 
-        return dateToShow;
+
     }
 }
 

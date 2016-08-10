@@ -8,7 +8,31 @@
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- API 14 theme customizations can go here. -->
         <item name="colorPrimary">@color/white</item>
+        <item name="android:textAppearance">@style/MyCustomActionBarTextAppearance</item>
         <item name="colorControlActivated">@color/light_gray</item>
+    </style>
+
+    <style name="MyCustomActionBarTextAppearance" parent="AppBaseTheme">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@color/blue</item>
+        <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabSelectedTextColor">@color/blue</item>
+    </style>
+
+    <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/light_gray</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <!--<style name="MyActionBarLogo" parent="@style/Widget.AppCompat.Light.ActionBar">-->

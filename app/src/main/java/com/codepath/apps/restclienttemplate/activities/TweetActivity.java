@@ -155,7 +155,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
 
     private void getProfileImageUrl() {
         if(isNetworkAvailable()) {
-            client.getProfileImageUrl(new JsonHttpResponseHandler() {
+            client.getProfileDetails(new JsonHttpResponseHandler() {
 
                 // SUCCESS
                 @Override
@@ -178,8 +178,6 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
 
             });
         }
-
-
     }
 
     private Boolean isNetworkAvailable() {

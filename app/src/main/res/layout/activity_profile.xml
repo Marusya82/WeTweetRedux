@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.codepath.apps.restclienttemplate.activities.ProfileActivity" >
+
+    <RelativeLayout
+        android:id="@+id/rlHeader"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" >
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivBackgroundImage"
+            tools:src="@drawable/ic_launcher"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/ivProfileImage"
+            tools:src="@drawable/ic_launcher"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tvUserName"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:paddingTop="5dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            tools:text="Billy"
+            android:textSize="13sp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/ivBackgroundImage" />
+
+        <TextView
+            android:id="@+id/tvUserScreenName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="/@name"
+            android:textColor="@color/gray"
+            android:fontFamily="sans-serif-light"
+            android:textSize="11sp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvUserName" />
+
+        <TextView
+            android:id="@+id/tvTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Tagline"
+            android:fontFamily="sans-serif-light"
+            android:textSize="12sp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/tvUserScreenName"/>
+
+        <TextView
+            android:id="@+id/tvFollowing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="1256"
+            android:fontFamily="sans-serif-light"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:layout_below="@id/tvTagline"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/tvFollowingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="FOLLOWING"
+            android:fontFamily="sans-serif-light"
+            android:textSize="11sp"
+            android:paddingLeft="4dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:layout_alignTop="@+id/tvFollowing"
+            android:layout_toRightOf="@+id/tvFollowing"
+            android:layout_toEndOf="@+id/tvFollowing" />
+
+        <TextView
+            android:id="@+id/tvFollowers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="589"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-light"
+            android:textSize="11sp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:paddingLeft="7dp"
+            android:layout_alignTop="@+id/tvFollowingText"
+            android:layout_toRightOf="@+id/tvFollowingText"
+            android:layout_toEndOf="@+id/tvFollowingText" />
+
+        <TextView
+            android:id="@+id/tvFollowersText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="FOLLOWERS"
+            android:fontFamily="sans-serif-light"
+            android:textSize="11sp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:paddingLeft="4dp"
+            android:layout_alignTop="@+id/tvFollowers"
+            android:layout_toRightOf="@+id/tvFollowers"
+            android:layout_toEndOf="@+id/tvFollowers" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_below="@id/tvFollowers"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_gray"/>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/flBody"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlHeader"
+        android:layout_alignParentLeft="true" >
+    </FrameLayout>
+
+</RelativeLayout>
+
+

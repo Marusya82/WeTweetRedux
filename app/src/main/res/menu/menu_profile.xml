@@ -11,20 +11,4 @@
         app:showAsAction="always"
         app:actionLayout="@layout/action_view_progress" />
 
-    <item
-        android:id="@+id/miBirdie"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/birdie_small"
-        tools:title="Refresh"
-        android:onClick="onRefresh"
-        android:title="" />
-
-    <item
-        android:id="@+id/miProfile"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/user_profile_main"
-        tools:title="Profile"
-        android:onClick="onProfileView"
-        android:title="" />
-
 </menu>

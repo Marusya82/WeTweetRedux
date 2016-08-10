@@ -82,7 +82,7 @@ public class ComposeDialogFragment extends DialogFragment {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         btnTweet.setOnClickListener(v -> {
-            ComposeDialogListener listener = (ComposeDialogListener) getActivity();
+            ComposeDialogListener listener = (ComposeDialogListener) getTargetFragment();
             String passIt = etTweetBody.getText().toString();
             listener.onFinishTweetDialog(passIt, inReplyToStatusId);
             dismiss();
