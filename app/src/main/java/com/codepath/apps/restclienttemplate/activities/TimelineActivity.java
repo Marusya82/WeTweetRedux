@@ -27,9 +27,9 @@ import com.codepath.apps.restclienttemplate.client.TwitterApplication;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.database.TweetsDatabaseHelper;
 import com.codepath.apps.restclienttemplate.fragments.ComposeDialogFragment;
+import com.codepath.apps.restclienttemplate.models.SampleModel;
 import com.codepath.apps.restclienttemplate.models.DividerItemDecoration;
 import com.codepath.apps.restclienttemplate.models.EndlessScrollListener;
-import com.codepath.apps.restclienttemplate.models.ItemClickSupport;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -111,7 +111,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
                 }
             });
 
-            ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
+            SampleModel.ItemClickSupport.addTo(rvTweets).setOnItemClickListener(
                     (recyclerView, position, v) -> {
                         Intent i = new Intent(getApplicationContext(), TweetActivity.class);
                         Tweet tweet = tweets.get(position);
@@ -277,7 +277,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeDialog
 
     @Override
     public void onFinishTweetDialog(String tweet, String inReplyToStatusId) {
-        Snackbar.make(findViewById(android.R.id.content), tweet, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content), R.string.posted, Snackbar.LENGTH_SHORT).show();
         RequestParams params = new RequestParams();
         params.add("status", tweet);
 

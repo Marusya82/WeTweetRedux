@@ -6,7 +6,7 @@
 //
 //public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
 //    final int PAGE_COUNT = 3;
-//    private String tabTitles[] = new String[] { "Home", "Notifications", "Me" };
+//    private String tabTitles[] = new String[] { "Home", "Mentions", "Me" };
 //
 //    public SampleFragmentPagerAdapter(FragmentManager fm) {
 //        super(fm);

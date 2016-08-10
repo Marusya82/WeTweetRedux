@@ -64,6 +64,56 @@ public class TwitterClient extends OAuthBaseClient {
 		getClient().get(apiUrl, handler);
 	}
 
+	// retweet a tweet, require an "id" of a tweet passed in the params
+	public void postRetweet(RequestParams params, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/retweet/:id.json");
+		// execute the request
+		getClient().post(apiUrl, params, handler);
+	}
+
+	// https://api.twitter.com/1.1/followers/ids.json
+	// pass "user_id" or "screen_name" as a param
+	public void getFollowers(RequestParams params, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("followers/ids.json");
+        // execute the request
+        getClient().get(apiUrl, params, handler);
+	}
+
+    // https://api.twitter.com/1.1/search/tweets.json
+    // "q" as a search query for the request
+    public void searchTweets(RequestParams params, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("search/tweets.json");
+        // execute the request
+        getClient().get(apiUrl, params, handler);
+    }
+
+    // https://api.twitter.com/1.1/statuses/user_timeline.json
+    // returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id parameters
+    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        // execute the request
+        getClient().get(apiUrl, params, handler);
+    }
+
+    // https://api.twitter.com/1.1/direct_messages.json
+    // returns the 20 most recent direct messages sent to the authenticating user
+    // optional: since_id, max_id, count
+    public void getMessages(RequestParams params, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("direct_messages.json");
+        // execute the request
+        getClient().get(apiUrl, params, handler);
+    }
+
+    // https://api.twitter.com/1.1/statuses/mentions_timeline.json
+    // optional: since_id, max_id, count
+    public void getMentions(RequestParams params, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        // execute the request
+        getClient().get(apiUrl, params, handler);
+    }
+
+
+
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");
 	 * 2. Define the parameters to pass to the request (query or body)
