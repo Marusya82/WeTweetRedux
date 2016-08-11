@@ -89,13 +89,10 @@ public class TwitterClient extends OAuthBaseClient {
 
     // https://api.twitter.com/1.1/statuses/user_timeline.json
     // returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id parameters
-    public void getUserTimeline(String userScreenName, AsyncHttpResponseHandler handler) {
+    public void getUserTimeline(RequestParams params, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/user_timeline.json");
         // execute the request
-        RequestParams params = new RequestParams();
-        params.put("count", 25);
-        params.put("screen_name", userScreenName);
-        getClient().get(apiUrl, null, handler);
+        getClient().get(apiUrl, params, handler);
     }
 
     // https://api.twitter.com/1.1/direct_messages.json

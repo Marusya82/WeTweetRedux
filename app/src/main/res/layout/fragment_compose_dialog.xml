@@ -5,8 +5,8 @@
     tools:context=".fragments.ComposeDialogFragment">
 
     <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/ivDialogProfileImage"
         android:src="@drawable/ic_launcher"
         android:paddingLeft="8dp"

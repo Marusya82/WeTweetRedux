@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -11,10 +12,14 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.R;
+import com.codepath.apps.restclienttemplate.activities.ProfileActivity;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.apps.restclienttemplate.models.ViewHolderImageTweet;
 import com.codepath.apps.restclienttemplate.models.ViewHolderSimpleTweet;
 import com.codepath.apps.restclienttemplate.models.ViewHolderVideoTweet;
+
+import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,6 +102,11 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             holder.getTvTimestamp().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
             holder.getTvUserScreenName().setText(String.format("@%s", tweet.getUser().getScreenName()));
 
+            holder.getIvProfileImage().setOnClickListener(v -> {
+                Intent i = new Intent(context, ProfileActivity.class);
+                context.startActivity(i);
+            });
+
 //            holder.getTextureView().setMediaController(holder.getPlayerController());
 //            holder.getTextureView().setVideo(tweet.getVideoUrl());
         }
@@ -115,6 +125,14 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             holder.getTvTweetBody().setText(tweet.getBody());
             holder.getTvTimestamp().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
             holder.getTvUserScreenName().setText(String.format("@%s", tweet.getUser().getScreenName()));
+
+            holder.getIvProfileImage().setOnClickListener(v -> {
+                User user = tweet.getUser();
+                Intent i = new Intent(context, ProfileActivity.class);
+                i.putExtra("user", Parcels.wrap(user));
+                i.putExtra("screen_name", tweet.getUser().getScreenName());
+                context.startActivity(i);
+            });
         }
     }
 
@@ -131,6 +149,14 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             holder.getTvTweetBody().setText(tweet.getBody());
             holder.getTvTimestamp().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
             holder.getTvUserScreenName().setText(String.format("@%s", tweet.getUser().getScreenName()));
+
+            holder.getIvProfileImage().setOnClickListener(v -> {
+                User user = tweet.getUser();
+                Intent i = new Intent(context, ProfileActivity.class);
+                i.putExtra("user", Parcels.wrap(user));
+                i.putExtra("screen_name", tweet.getUser().getScreenName());
+                context.startActivity(i);
+            });
 
             ImageView tweetImage = holder.getIvImage();
             tweetImage.setImageResource(android.R.color.transparent);

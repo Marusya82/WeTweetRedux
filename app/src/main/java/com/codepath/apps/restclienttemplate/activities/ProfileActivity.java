@@ -19,6 +19,7 @@ import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,29 +50,35 @@ public class ProfileActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.arrow_home);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        client = TwitterApplication.getRestClient();
-        // get the account info
-        client.getProfileDetails(new JsonHttpResponseHandler() {
-            // SUCCESS
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonResponse) {
-                // get JSON, deserialize it, create models and add them into adapter, into the data set
-                Log.d("DEBUG", jsonResponse.toString());
-                user = User.fromJSON(jsonResponse);
-                // my current user information
-                getSupportActionBar().setTitle("@" + user.getScreenName());
-                populateProfileHeader(user);
-            }
-
-            // FAILURE
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-//                Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
-            }
-        });
-
         String screenName = getIntent().getStringExtra("screen_name");
+//        Log.d("DEBUG", screenName);
+        user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
+        if (user == null) {
+            client = TwitterApplication.getRestClient();
+            // get the account info
+            client.getProfileDetails(new JsonHttpResponseHandler() {
+                // SUCCESS
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonResponse) {
+                    // get JSON, deserialize it, create models and add them into adapter, into the data set
+                    Log.d("DEBUG", jsonResponse.toString());
+                    user = User.fromJSON(jsonResponse);
+                    // my current user information
+                    populateProfileHeader(user);
+                }
+
+                // FAILURE
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    if (errorResponse != null) Log.d("DEBUG", errorResponse.toString());
+                    // Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                }
+            });
+        } else {
+            // whatever is passed in the intent
+            populateProfileHeader(user);
+        }
+
         if (savedInstanceState == null) {
             UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

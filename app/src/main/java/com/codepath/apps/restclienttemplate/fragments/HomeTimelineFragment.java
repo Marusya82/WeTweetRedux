@@ -1,15 +1,14 @@
 package com.codepath.apps.restclienttemplate.fragments;
 
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 
+import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.client.TwitterApplication;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
 import com.codepath.apps.restclienttemplate.database.TweetsDatabaseHelper;
@@ -28,13 +27,13 @@ import cz.msebera.android.httpclient.Header;
 public class HomeTimelineFragment extends TweetsListFragment implements ComposeDialogFragment.ComposeDialogListener {
 
     private TwitterClient client;
-    private boolean firstQuery = true;
     int count = 20;
     private long maxId;
     private String title;
     private int page;
     private String profileUrl;
     TweetsDatabaseHelper helper;
+    private View myView;
 
     // newInstance constructor for creating fragment with arguments
     public static HomeTimelineFragment newInstance(int page, String title) {
@@ -49,24 +48,16 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         client = TwitterApplication.getRestClient();
-
-        // get db instance and construct the data source
         helper = TweetsDatabaseHelper.getInstance(getActivity());
-
-        if (isNetworkAvailable()) {
-            getProfileImageUrl();
-            populateTimeline();
-        } else {
-            ArrayList<Tweet> savedTweets = helper.getAll();
-            addDb(savedTweets);
-        }
+        // get db instance and construct the data source
+        getProfileImageUrl();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        myView = view;
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(v -> {
             FragmentManager fm = getFragmentManager();
@@ -79,13 +70,50 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
         });
     }
 
-    private void populateTimeline() {
+    @Override
+    protected void populateTimeline() {
         RequestParams params = new RequestParams();
-        if (firstQuery) {
-            params.put("since_id", 1);
-            firstQuery = false;
-        } else params.put("max_id", maxId);
+        params.put("since_id", 1);
+        params.put("count", count);
 
+        client.getHomeTimeline(params, new JsonHttpResponseHandler() {
+
+            // SUCCESS
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
+                // get JSON, deserialize it, create models and add them into adapter, into the data set
+                Log.d("DEBUG", jsonArray.toString());
+                ArrayList<Tweet> newItems = Tweet.fromJSONArray(jsonArray);
+                if (!newItems.isEmpty()) {
+                    Tweet latestTweet = newItems.get(newItems.size() - 1);
+                    // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
+                    maxId = latestTweet.getTid() - 1;
+                    addAll(newItems);
+                }
+//                update database
+//                helper.deleteAll();
+//                helper.addAll(newItems);
+            }
+
+            // FAILURE
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (errorResponse != null) Log.d("DEBUG", errorResponse.toString());
+                Snackbar.make(myView, R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+            }
+        });
+    }
+
+    @Override
+    protected void populateDb() {
+        ArrayList<Tweet> savedTweets = helper.getAll();
+        addDb(savedTweets);
+    }
+
+    @Override
+    protected void paginate() {
+        RequestParams params = new RequestParams();
+        params.put("max_id", maxId);
         params.put("count", count);
 
         client.getHomeTimeline(params, new JsonHttpResponseHandler() {
@@ -100,17 +128,19 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
                 // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
                 maxId = latestTweet.getTid() - 1;
                 addAll(newItems);
-                helper.deleteAll();
-                helper.addAll(newItems);
+                //update database?
+//                helper.deleteAll();
+//                helper.addAll(newItems);
             }
 
             // FAILURE
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
-//                Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                if (errorResponse != null) Log.d("DEBUG", errorResponse.toString());
+                Snackbar.make(myView, R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
             }
         });
+
     }
 
     private void getProfileImageUrl() {
@@ -132,10 +162,9 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
                 // FAILURE
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
-//                    Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                    if (errorResponse != null) Log.d("DEBUG", errorResponse.toString());
+                    Snackbar.make(myView, R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
                 }
-
             });
         }
     }
@@ -156,23 +185,16 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
                     Tweet newTweet = Tweet.fromJSON(response);
                     maxId = newTweet.getTid() - 1;
                     addOne(newTweet);
+                    Snackbar.make(myView, R.string.posted, Snackbar.LENGTH_SHORT).show();
                 }
 
                 // FAILURE
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
-//                    Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                    if (errorResponse != null) Log.d("DEBUG", errorResponse.toString());
+                    Snackbar.make(myView, R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
                 }
             });
         }
     }
-
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
 }
