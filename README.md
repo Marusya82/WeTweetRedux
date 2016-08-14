@@ -57,9 +57,7 @@ The following **additional** features are implemented:
 Here's a walkthrough of implemented user stories:
 
 ##### Online mode 
-![Alt Text](https://github.com/Marusya82/WeTweetRedux/blob/master/WeTweetRedux_online_demo.gif)
-##### Offline mode 
-![Alt Text](https://github.com/Marusya82/WeTweetRedux/blob/master/WeTweetRedux_offline_demo.gif)
+![Alt Text](https://github.com/Marusya82/WeTweetRedux/blob/master/WeTweetRedux_demo.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
