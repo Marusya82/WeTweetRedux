@@ -41,7 +41,7 @@ public abstract class TweetsListFragment extends Fragment {
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
     private Unbinder unbinder;
-    protected boolean swipe;
+    protected int count = 20;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
@@ -91,7 +91,6 @@ public abstract class TweetsListFragment extends Fragment {
         );
 
         swipeContainer.setOnRefreshListener(() -> {
-            swipe = true;
             populateTimeline();
             swipeContainer.setRefreshing(false);
         });
@@ -101,12 +100,20 @@ public abstract class TweetsListFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
     }
 
-    protected void addAll(ArrayList<Tweet> newTweets) {
+    protected void addToTail(ArrayList<Tweet> newTweets) {
         int curSize = adaptTweets.getItemCount();
         tweets.addAll(newTweets);
+        adaptTweets.notifyItemRangeInserted(curSize, newTweets.size());
+    }
+
+    protected void refresh(ArrayList<Tweet> newTweets) {
+        int curSize = adaptTweets.getItemCount();
+        tweets.clear();
+        adaptTweets.notifyItemRangeRemoved(0, curSize);
+        tweets.addAll(newTweets);
+        // curSize should represent the first element that got added, newItems.size() represents the itemCount
         adaptTweets.notifyItemRangeInserted(curSize, newTweets.size());
     }
 
@@ -132,7 +139,7 @@ public abstract class TweetsListFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public Boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

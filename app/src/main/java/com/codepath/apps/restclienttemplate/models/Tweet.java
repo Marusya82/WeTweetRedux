@@ -1,8 +1,6 @@
 package com.codepath.apps.restclienttemplate.models;
 
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +13,8 @@ import java.util.ArrayList;
 public class Tweet {
     // list out the attributes
     User user;
+    User sender;
+    User receiver;
     long tid;
     String body;
     String createdAt;
@@ -22,6 +22,30 @@ public class Tweet {
     String videoUrl;
     String likes;
     String retweets;
+
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
+    public void setLikes(String likes) {
+        this.likes = likes;
+    }
+
+    public void setRetweets(String retweets) {
+        this.retweets = retweets;
+    }
+
+    public User getSender() {
+        return sender;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
 
     public String getLikes() {
         return likes;
@@ -84,7 +108,7 @@ public class Tweet {
     // Tweet.fromJSON("{ ... }") => Tweet
     public static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
-        // extract the values from teh json, store them
+        // extract the values from the json, store them
         try {
             tweet.body = jsonObject.getString("text");
             tweet.tid = jsonObject.getLong("id");
@@ -99,11 +123,17 @@ public class Tweet {
                 JSONObject obj = media.getJSONObject(0);
                 String mediaUrl = obj.getString("media_url");
                 String mediaType = obj.getString("type");
-                if (mediaType.equals("photo") && !mediaUrl.contains("video")) tweet.imageUrl = mediaUrl;
-                else if (mediaType.equals("video") || mediaUrl.contains("video")) tweet.videoUrl = mediaUrl;
+                if (mediaType.equals("photo") && !mediaUrl.contains("video"))
+                    tweet.imageUrl = mediaUrl;
+                else if (mediaType.equals("video") || mediaUrl.contains("video"))
+                    tweet.videoUrl = mediaUrl;
             }
-            if (tweet.imageUrl != null) Log.d("DEBUG", tweet.imageUrl);
-            if (tweet.videoUrl != null) Log.d("DEBUG", tweet.videoUrl);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            tweet.sender = User.fromJSON(jsonObject.getJSONObject("sender"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

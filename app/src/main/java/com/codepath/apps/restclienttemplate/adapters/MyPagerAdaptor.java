@@ -5,11 +5,12 @@ import android.support.v4.app.FragmentManager;
 
 import com.codepath.apps.restclienttemplate.fragments.HomeTimelineFragment;
 import com.codepath.apps.restclienttemplate.fragments.MentionsTimelineFragment;
+import com.codepath.apps.restclienttemplate.fragments.MessagesFragment;
 
 public class MyPagerAdaptor extends SmartFragmentStatePagerAdapter {
 
-    final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Home", "Mentions" };
+    final int PAGE_COUNT = 3;
+    private String tabTitles[] = new String[] { "Home", "Mentions", "Messages" };
 
     public MyPagerAdaptor(FragmentManager fm) {
         super(fm);
@@ -27,6 +28,8 @@ public class MyPagerAdaptor extends SmartFragmentStatePagerAdapter {
                 return HomeTimelineFragment.newInstance(0, "");
             case 1:
                 return MentionsTimelineFragment.newInstance(1, "");
+            case 2:
+                return MessagesFragment.newInstance(2, "");
             default:
                 return null;
         }

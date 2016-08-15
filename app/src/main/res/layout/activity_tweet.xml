@@ -176,12 +176,28 @@
             android:layout_below="@id/separator2"
             android:layout_alignParentLeft="true" />
 
-        <View
-            android:id="@+id/separator3"
-            android:layout_below="@id/ivReply"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/light_gray"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivFav"
+            tools:src="@drawable/heart"
+            android:paddingTop="4dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="4dp"
+            android:layout_toRightOf="@id/ivReply"
+            android:layout_below="@id/separator2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivRetweet"
+            tools:src="@drawable/retweet"
+            android:paddingTop="4dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="4dp"
+            android:layout_toRightOf="@id/ivFav"
+            android:layout_below="@+id/separator2" />
 
     </RelativeLayout>
 

@@ -10,6 +10,7 @@ import android.view.View;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.client.TwitterApplication;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
+import com.codepath.apps.restclienttemplate.database.UserTimelineDatabaseHelper;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -25,10 +26,8 @@ public class UserTimelineFragment extends TweetsListFragment {
 
     private TwitterClient client;
     private long maxId;
-    private String title;
-    private int page;
     private View myView;
-    private int count = 20;
+    UserTimelineDatabaseHelper helper;
 
     // newInstance constructor for creating fragment with arguments
     public static UserTimelineFragment newInstance(String screenName) {
@@ -66,10 +65,12 @@ public class UserTimelineFragment extends TweetsListFragment {
                 // get JSON, deserialize it, create models and add them into adapter, into the data set
                 Log.d("DEBUG", jsonArray.toString());
                 ArrayList<Tweet> newItems = Tweet.fromJSONArray(jsonArray);
-                Tweet latestTweet = newItems.get(newItems.size() - 1);
-                // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
-                maxId = latestTweet.getTid() - 1;
-                addAll(newItems);
+                if (!newItems.isEmpty()) {
+                    Tweet latestTweet = newItems.get(newItems.size() - 1);
+                    // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
+                    maxId = latestTweet.getTid() - 1;
+                    refresh(newItems);
+                }
             }
 
             // FAILURE
@@ -82,7 +83,11 @@ public class UserTimelineFragment extends TweetsListFragment {
     }
 
     @Override
-    protected void populateDb() {}
+    protected void populateDb() {
+        helper = UserTimelineDatabaseHelper.getInstance(getActivity());
+        ArrayList<Tweet> savedTweets = helper.getAll();
+        addDb(savedTweets);
+    }
 
     @Override
     protected void paginate() {
@@ -103,7 +108,7 @@ public class UserTimelineFragment extends TweetsListFragment {
                     Tweet latestTweet = newItems.get(newItems.size() - 1);
                     // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
                     maxId = latestTweet.getTid() - 1;
-                    addAll(newItems);
+                    addToTail(newItems);
                 }
             }
 

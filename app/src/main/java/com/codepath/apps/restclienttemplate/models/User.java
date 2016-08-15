@@ -66,7 +66,7 @@ public class User {
     // deserialize the user json => User
     public static User fromJSON(JSONObject jsonObject) {
         User user = new User();
-        // extract the values from teh json, store them
+        // extract the values from the json, store them
         try {
             user.name = jsonObject.getString("name");
             user.uid = jsonObject.getLong("id");

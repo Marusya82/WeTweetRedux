@@ -10,7 +10,6 @@ import android.view.View;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.client.TwitterApplication;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
-import com.codepath.apps.restclienttemplate.database.MentionsDatabaseHelper;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -22,16 +21,15 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MentionsTimelineFragment extends TweetsListFragment {
+public class MessagesFragment extends TweetsListFragment {
 
     private TwitterClient client;
-    MentionsDatabaseHelper helper;
-    private long maxId;
     private View myView;
+    private long maxId;
 
     // newInstance constructor for creating fragment with arguments
-    public static MentionsTimelineFragment newInstance(int page, String title) {
-        MentionsTimelineFragment frag = new MentionsTimelineFragment();
+    public static MessagesFragment newInstance(int page, String title) {
+        MessagesFragment frag = new MessagesFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
@@ -55,22 +53,20 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     protected void populateTimeline() {
         RequestParams params = new RequestParams();
         params.put("since_id", 1);
-        params.put("screen_name", "MarinaGetAway");
         params.put("count", count);
 
-        client.getMentions(params, new JsonHttpResponseHandler() {
+        client.getMessages(params, new JsonHttpResponseHandler() {
 
             // SUCCESS
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray jsonArray) {
                 // get JSON, deserialize it, create models and add them into adapter, into the data set
-                Log.d("DEBUG", jsonArray.toString());
                 ArrayList<Tweet> newItems = Tweet.fromJSONArray(jsonArray);
                 if (!newItems.isEmpty()) {
                     Tweet latestTweet = newItems.get(newItems.size() - 1);
-                    // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
                     maxId = latestTweet.getTid() - 1;
                     refresh(newItems);
+                    Log.d("DEBUG", newItems.toString());
                 }
             }
 
@@ -84,20 +80,15 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     }
 
     @Override
-    protected void populateDb() {
-        helper = MentionsDatabaseHelper.getInstance(getActivity());
-        ArrayList<Tweet> savedTweets = helper.getAll();
-        addDb(savedTweets);
-    }
+    protected void populateDb() {}
 
     @Override
     protected void paginate() {
         RequestParams params = new RequestParams();
         params.put("max_id", maxId);
-        params.put("screen_name", "MarinaGetAway");
         params.put("count", count);
 
-        client.getMentions(params, new JsonHttpResponseHandler() {
+        client.getMessages(params, new JsonHttpResponseHandler() {
 
             // SUCCESS
             @Override

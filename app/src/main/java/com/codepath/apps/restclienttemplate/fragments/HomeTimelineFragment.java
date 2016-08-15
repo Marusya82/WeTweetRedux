@@ -27,12 +27,9 @@ import cz.msebera.android.httpclient.Header;
 public class HomeTimelineFragment extends TweetsListFragment implements ComposeDialogFragment.ComposeDialogListener {
 
     private TwitterClient client;
-    int count = 20;
     private long maxId;
-    private String title;
-    private int page;
     private String profileUrl;
-    TweetsDatabaseHelper helper;
+    private TweetsDatabaseHelper helper;
     private View myView;
 
     // newInstance constructor for creating fragment with arguments
@@ -86,13 +83,16 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
                 ArrayList<Tweet> newItems = Tweet.fromJSONArray(jsonArray);
                 if (!newItems.isEmpty()) {
                     Tweet latestTweet = newItems.get(newItems.size() - 1);
+//                    Tweet freshestTweet = newItems.get(0);
                     // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
+//                    sinceId = freshestTweet.getTid();
                     maxId = latestTweet.getTid() - 1;
-                    addAll(newItems);
+                    refresh(newItems);
+                    Log.d("DEBUG", newItems.toString());
                 }
 //                update database
-//                helper.deleteAll();
-//                helper.addAll(newItems);
+                helper.deleteAll();
+                helper.addAll(newItems);
             }
 
             // FAILURE
@@ -127,10 +127,10 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
                 Tweet latestTweet = newItems.get(newItems.size() - 1);
                 // passing max_id returns <=, adjust it accordingly to avoid duplicate tweets
                 maxId = latestTweet.getTid() - 1;
-                addAll(newItems);
+                addToTail(newItems);
                 //update database?
-//                helper.deleteAll();
-//                helper.addAll(newItems);
+                helper.deleteAll();
+                helper.addAll(newItems);
             }
 
             // FAILURE
@@ -140,7 +140,6 @@ public class HomeTimelineFragment extends TweetsListFragment implements ComposeD
                 Snackbar.make(myView, R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
             }
         });
-
     }
 
     private void getProfileImageUrl() {

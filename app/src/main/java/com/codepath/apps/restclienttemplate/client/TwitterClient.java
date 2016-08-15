@@ -65,11 +65,18 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	// retweet a tweet, require an "id" of a tweet passed in the params
-	public void postRetweet(RequestParams params, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/retweet/:id.json");
+	public void postRetweet(long id, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl(String.format("statuses/retweet/%s.json", String.valueOf(id)));
 		// execute the request
-		getClient().post(apiUrl, params, handler);
+		getClient().post(apiUrl, handler);
 	}
+
+    // retweet a tweet, require an "id" of a tweet passed in the params
+    public void postUnretweet(long id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl(String.format("statuses/unretweet/%s.json", String.valueOf(id)));
+        // execute the request
+        getClient().post(apiUrl, handler);
+    }
 
 	// https://api.twitter.com/1.1/followers/ids.json
 	// pass "user_id" or "screen_name" as a param
@@ -78,6 +85,12 @@ public class TwitterClient extends OAuthBaseClient {
         // execute the request
         getClient().get(apiUrl, params, handler);
 	}
+
+    public void getFollowing(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("friends/ids.json");
+        // execute the request
+        getClient().get(apiUrl, handler);
+    }
 
     // https://api.twitter.com/1.1/search/tweets.json
     // "q" as a search query for the request
@@ -110,6 +123,20 @@ public class TwitterClient extends OAuthBaseClient {
         String apiUrl = getApiUrl("statuses/mentions_timeline.json");
         // execute the request
         getClient().get(apiUrl, params, handler);
+    }
+
+    // favorite a tweet, require an "id" of a tweet passed in the params
+    public void postFavorite(RequestParams params, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/create.json");
+        // execute the request
+        getClient().post(apiUrl, params, handler);
+    }
+
+    // favorite a tweet, require an "id" of a tweet passed in the params
+    public void postUnfavorite(RequestParams params, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("favorites/destroy.json");
+        // execute the request
+        getClient().post(apiUrl, params, handler);
     }
 
 

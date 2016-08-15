@@ -44,11 +44,16 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
     @BindView(R.id.tvLikesText) TextView tvLikesText;
     @BindView(R.id.tvRetweets) TextView tvRetweets;
     @BindView(R.id.tvRetweetsText) TextView tvRetweetsText;
+    @BindView(R.id.ivFav) ImageView ivFav;
+    @BindView(R.id.ivRetweet) ImageView ivRetweet;
 
     Context context;
     private TwitterClient client;
     long maxId;
     String profileUrl;
+    private Tweet tweet;
+    private boolean liked = false;
+    private boolean retweeted = false;
 //    MenuItem miActionProgressItem;
 
     @Override
@@ -64,14 +69,12 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.arrow_home);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setLogo(R.drawable.birdie_small);
-        actionBar.setDisplayUseLogoEnabled(true);
 
         client = TwitterApplication.getRestClient();
 
         getProfileImageUrl();
         context = getApplicationContext();
-        Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
+        tweet = Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
         ivProfileImage.setImageResource(android.R.color.transparent); // clear out the old image for a recycler view);
         String imageUrl = tweet.getUser().getProfileImageUrl();
         Glide.with(context).load(imageUrl).bitmapTransform(new RoundedCornersTransformation(context, 5, 0)).into(ivProfileImage);
@@ -87,6 +90,35 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
             tvRetweets.setText(tweet.getRetweets());
             tvRetweetsText.setText("RETWEETS");
         }
+
+        if (liked) ivFav.setImageResource(R.drawable.heart_clicked);
+        else ivFav.setImageResource(R.drawable.heart);
+        ivFav.setOnClickListener(v -> {
+            if (liked) {
+                unfavorite();
+                ivFav.setImageResource(R.drawable.heart);
+                liked = false;
+            } else {
+                favorite();
+                ivFav.setImageResource(R.drawable.heart_clicked);
+                liked = true;
+            }
+        });
+
+        if (retweeted) ivRetweet.setImageResource(R.drawable.retweeted);
+        else ivRetweet.setImageResource(R.drawable.retweet);
+        ivRetweet.setOnClickListener(v -> {
+            if (retweeted) {
+                unretweet();
+                ivRetweet.setImageResource(R.drawable.retweet);
+                retweeted = false;
+            } else {
+                retweet();
+                ivRetweet.setImageResource(R.drawable.retweeted);
+                retweeted = true;
+            }
+
+        });
 
         String[] str = tweet.getCreatedAt().split(" ");
         tvTimestamp.setText(String.format("%s %s %s, %s", str[0], str[1], str[2], str[3]));
@@ -121,7 +153,6 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
 
     @Override
     public void onFinishTweetDialog(String tweet, String inReplyToStatusId) {
-        Snackbar.make(findViewById(android.R.id.content), tweet, Snackbar.LENGTH_SHORT).show();
         RequestParams params = new RequestParams();
         params.add("status", tweet);
         params.add("in_reply_to_status_id", inReplyToStatusId);
@@ -144,7 +175,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     Log.d("DEBUG", errorResponse.toString());
-                    Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                    Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_SHORT).show();
                 }
             });
 //            Intent mIntent = new Intent(TweetActivity.this, TimelineActivity.class);
@@ -173,7 +204,7 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     Log.d("DEBUG", errorResponse.toString());
-                    Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                    Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_SHORT).show();
                 }
 
             });
@@ -185,5 +216,89 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public void favorite() {
+        RequestParams params = new RequestParams();
+        params.add("id", String.valueOf(tweet.getTid()));
+        client.postFavorite(params, new JsonHttpResponseHandler() {
+
+            // SUCCESS
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+                // get JSON, deserialize it, create models and add them into adapter, into the data set
+//                Snackbar.make(findViewById(android.R.id.content), R.string.favorite, Snackbar.LENGTH_SHORT).show();
+            }
+
+            // FAILURE
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+                Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+    public void unfavorite() {
+        RequestParams params = new RequestParams();
+        params.add("id", String.valueOf(tweet.getTid()));
+        client.postUnfavorite(params, new JsonHttpResponseHandler() {
+
+            // SUCCESS
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+                // get JSON, deserialize it, create models and add them into adapter, into the data set
+//                Snackbar.make(findViewById(android.R.id.content), R.string.unfavorite, Snackbar.LENGTH_SHORT).show();
+            }
+
+            // FAILURE
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+                Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+    public void retweet() {
+        client.postRetweet(tweet.getTid(), new JsonHttpResponseHandler() {
+
+            // SUCCESS
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+                // get JSON, deserialize it, create models and add them into adapter, into the data set
+                Snackbar.make(findViewById(android.R.id.content), R.string.retweeted, Snackbar.LENGTH_SHORT).show();
+            }
+
+            // FAILURE
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+                Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_SHORT).show();
+            }
+
+        });
+    }
+
+    public void unretweet() {
+        client.postUnretweet(tweet.getTid(), new JsonHttpResponseHandler() {
+
+            // SUCCESS
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+                // get JSON, deserialize it, create models and add them into adapter, into the data set
+                Snackbar.make(findViewById(android.R.id.content), R.string.unretweeted, Snackbar.LENGTH_SHORT).show();
+            }
+
+            // FAILURE
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+                Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_SHORT).show();
+            }
+
+        });
     }
 }

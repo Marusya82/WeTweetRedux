@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.tvFollowersText) TextView tvFollowersText;
 
     TwitterClient client;
+    MenuItem miActionProgressItem;
     User user;
 
     @Override
@@ -53,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
         String screenName = getIntent().getStringExtra("screen_name");
 //        Log.d("DEBUG", screenName);
         user = Parcels.unwrap(getIntent().getParcelableExtra("user"));
+//        showProgressBar();
         if (user == null) {
             client = TwitterApplication.getRestClient();
             // get the account info
@@ -71,13 +74,14 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     if (errorResponse != null) Log.d("DEBUG", errorResponse.toString());
-                    // Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
+                     Snackbar.make(findViewById(android.R.id.content), R.string.wrong, Snackbar.LENGTH_INDEFINITE).show();
                 }
             });
         } else {
             // whatever is passed in the intent
             populateProfileHeader(user);
         }
+//        hideProgressBar();
 
         if (savedInstanceState == null) {
             UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
@@ -114,6 +118,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -122,5 +132,15 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
     }
 }

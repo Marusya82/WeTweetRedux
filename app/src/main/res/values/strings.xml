@@ -13,5 +13,9 @@
     <string name="loading">Loading…</string>
     <string name="wrong">Something went wrong. Try again later</string>
     <string name="offline">No internet connectivity. You can only scroll through last saved tweets</string>
+    <string name="retweeted">Retweeted!</string>
+    <string name="unretweeted">Unretweeted!</string>
+    <string name="favorite">Liked!</string>
+    <string name="unfavorite">Unliked!</string>
 
 </resources>

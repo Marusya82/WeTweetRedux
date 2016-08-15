@@ -2,6 +2,8 @@ package com.codepath.apps.restclienttemplate.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -13,9 +15,11 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.activities.ProfileActivity;
+import com.codepath.apps.restclienttemplate.models.PatternEditableBuilder;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.codepath.apps.restclienttemplate.models.ViewHolderImageTweet;
+import com.codepath.apps.restclienttemplate.models.ViewHolderMessageTweet;
 import com.codepath.apps.restclienttemplate.models.ViewHolderSimpleTweet;
 import com.codepath.apps.restclienttemplate.models.ViewHolderVideoTweet;
 
@@ -25,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
@@ -32,7 +37,7 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private ArrayList<Tweet> mTweets;
     Context context;
-    private final int SIMPLE = 0, IMAGE = 1, VIDEO = 2;
+    private final int SIMPLE = 0, IMAGE = 1, VIDEO = 2, MESSAGE = 3;
 
     public TweetsRecyclerViewAdapter(ArrayList<Tweet> tweets) {
         this.mTweets = tweets;
@@ -58,6 +63,10 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 //                View view3 = inflater.inflate(R.layout.viewholder_video_tweet, viewGroup, false);
 //                viewHolder = new ViewHolderVideoTweet(view3);
 //                break;
+            case MESSAGE:
+                View view5 = inflater.inflate(R.layout.viewholder_message_tweet, viewGroup, false);
+                viewHolder = new ViewHolderMessageTweet(view5);
+                break;
             default:
                 View view4 = inflater.inflate(R.layout.viewholder_simple_tweet, viewGroup, false);
                 viewHolder = new ViewHolderSimpleTweet(view4);
@@ -81,6 +90,10 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 //                ViewHolderVideoTweet vh3 = (ViewHolderVideoTweet) viewHolder;
 //                configureViewHolderVideoTweet(vh3, position);
 //                break;
+            case MESSAGE:
+                ViewHolderMessageTweet vh5 = (ViewHolderMessageTweet) viewHolder;
+                configureViewHolderMessageTweet(vh5, position);
+                break;
             default:
                 ViewHolderSimpleTweet vh4 = (ViewHolderSimpleTweet) viewHolder;
                 configureViewHolderSimpleTweet(vh4, position);
@@ -123,6 +136,11 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
             holder.getTvUserName().setText(tweet.getUser().getName());
             holder.getTvTweetBody().setText(tweet.getBody());
+            new PatternEditableBuilder().
+                    addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
+                            text -> {
+                                Snackbar.make(holder.itemView, "Clicked username: " + text, Snackbar.LENGTH_SHORT).show();
+                            }).into(holder.getTvTweetBody());
             holder.getTvTimestamp().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
             holder.getTvUserScreenName().setText(String.format("@%s", tweet.getUser().getScreenName()));
 
@@ -130,7 +148,7 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 User user = tweet.getUser();
                 Intent i = new Intent(context, ProfileActivity.class);
                 i.putExtra("user", Parcels.wrap(user));
-                i.putExtra("screen_name", tweet.getUser().getScreenName());
+                i.putExtra("screen_name", user.getScreenName());
                 context.startActivity(i);
             });
         }
@@ -147,6 +165,11 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
             holder.getTvUserName().setText(tweet.getUser().getName());
             holder.getTvTweetBody().setText(tweet.getBody());
+            new PatternEditableBuilder().
+                    addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
+                            text -> {
+                                Snackbar.make(holder.itemView, "Clicked username: " + text, Snackbar.LENGTH_SHORT).show();
+                            }).into(holder.getTvTweetBody());
             holder.getTvTimestamp().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
             holder.getTvUserScreenName().setText(String.format("@%s", tweet.getUser().getScreenName()));
 
@@ -154,7 +177,7 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
                 User user = tweet.getUser();
                 Intent i = new Intent(context, ProfileActivity.class);
                 i.putExtra("user", Parcels.wrap(user));
-                i.putExtra("screen_name", tweet.getUser().getScreenName());
+                i.putExtra("screen_name", user.getScreenName());
                 context.startActivity(i);
             });
 
@@ -164,6 +187,35 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             Glide.with(context).load(tweetImageUrl).override(650, 400).centerCrop().into(tweetImage);
         }
     }
+
+    private void configureViewHolderMessageTweet(ViewHolderMessageTweet holder, int position) {
+        Tweet tweet = mTweets.get(position);
+        Log.d("DEBUG", tweet.toString());
+        if (tweet != null) {
+            ImageView profileImage = holder.getIvProfileImage();
+            profileImage.setImageResource(android.R.color.transparent); // clear out the old image for a recycler view);
+            String imageUrl = tweet.getSender().getProfileImageUrl();
+            Glide.with(context).load(imageUrl).bitmapTransform(new RoundedCornersTransformation(context, 5, 0)).into(profileImage);
+
+            holder.getTvUserName().setText(tweet.getSender().getName());
+            holder.getTvMessageBody().setText(tweet.getBody());
+            new PatternEditableBuilder().
+                    addPattern(Pattern.compile("\\@(\\w+)"), Color.BLUE,
+                            text -> {
+                                Snackbar.make(holder.itemView, "Clicked username: " + text, Snackbar.LENGTH_SHORT).show();
+                            }).into(holder.getTvMessageBody());
+            holder.getTvTimestamp().setText(getRelativeTimeAgo(tweet.getCreatedAt()));
+
+            holder.getIvProfileImage().setOnClickListener(v -> {
+                User sender = tweet.getSender();
+                Intent i = new Intent(context, ProfileActivity.class);
+                i.putExtra("user", Parcels.wrap(sender));
+                i.putExtra("screen_name", sender.getScreenName());
+                context.startActivity(i);
+            });
+        }
+    }
+
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
@@ -175,9 +227,12 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     public int getItemViewType(int position) {
         // later here will be different types of tweets (with image/video or simple text)
         Tweet inspect = mTweets.get(position);
-        if (inspect.getImageUrl() != null && !inspect.getImageUrl().isEmpty()) return IMAGE;
+        if (inspect.getImageUrl() != null && !inspect.getImageUrl().isEmpty()) {
+            return IMAGE;
+        } else if (inspect.getSender() != null) {
+            return MESSAGE;
+        } else return SIMPLE;
 //        else if (inspect.getVideoUrl() != null && !inspect.getVideoUrl().isEmpty()) return VIDEO;
-        else return SIMPLE;
     }
 
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
