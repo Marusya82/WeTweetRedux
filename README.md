@@ -51,6 +51,7 @@ The following **additional** features are implemented:
 * [x] Floating button for compose tweet is implemented for all timeline fragments
 * [x] Tweets are persisted in the SQL database for offline access
 * [x] Swipe refresh is implemented for all timelines
+* [x] User can see number of likes and retweets in the detailed view of a tweet
 
 ## Video Walkthrough
 
