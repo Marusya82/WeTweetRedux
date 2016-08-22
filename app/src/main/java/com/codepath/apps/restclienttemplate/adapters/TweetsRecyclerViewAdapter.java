@@ -184,7 +184,7 @@ public class TweetsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             ImageView tweetImage = holder.getIvImage();
             tweetImage.setImageResource(android.R.color.transparent);
             String tweetImageUrl = tweet.getImageUrl();
-            Glide.with(context).load(tweetImageUrl).override(650, 400).centerCrop().into(tweetImage);
+            Glide.with(context).load(tweetImageUrl).override(900, 400).centerCrop().into(tweetImage);
         }
     }
 

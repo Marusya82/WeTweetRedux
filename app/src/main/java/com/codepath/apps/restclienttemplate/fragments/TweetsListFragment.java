@@ -33,6 +33,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+/*
+    Reusable fragment model for different types of feed (tweets feed, followers/following feed)
+ */
+
 public abstract class TweetsListFragment extends Fragment {
 
     protected ArrayList<Tweet> tweets;
