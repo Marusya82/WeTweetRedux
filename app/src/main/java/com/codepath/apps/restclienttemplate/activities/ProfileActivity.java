@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.client.TwitterApplication;
 import com.codepath.apps.restclienttemplate.client.TwitterClient;
+import com.codepath.apps.restclienttemplate.fragments.FollowersFragment;
 import com.codepath.apps.restclienttemplate.fragments.UserTimelineFragment;
 import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -89,6 +91,16 @@ public class ProfileActivity extends AppCompatActivity {
             ft.replace(R.id.flBody, userTimelineFragment);
             ft.commit();
         }
+
+        tvFollowersText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FollowersFragment frag = FollowersFragment.newInstance("Followers");
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.flBody, frag);
+                ft.commit();
+            }
+        });
     }
 
     private void populateProfileHeader(User user) {

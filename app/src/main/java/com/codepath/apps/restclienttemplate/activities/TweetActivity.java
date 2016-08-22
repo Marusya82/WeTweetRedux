@@ -138,6 +138,8 @@ public class TweetActivity extends AppCompatActivity implements ComposeDialogFra
             composeDialog.setArguments(bundle);
             composeDialog.show(fm, "fragment_compose_dialog");
         });
+
+
     }
 
     @Override
